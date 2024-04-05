@@ -94,12 +94,11 @@ class imgbeddings:
             embeddings = self.pca_transform(embeddings)
         return embeddings
 
-    def process_inputs(self, inputs):
-        inputs = []
+    def process_inputs(self, inputs: list):
         for x in inputs:
             img = self.to_pil(x)
             if img is not None:
-                inputs.append(img.convert("RGB"))
+                inputs.append(square_pad(img.convert("RGB")))
             else:
                 logger.warning(f"Skipping invalid input: {x}")
         # inputs = [square_pad(self.to_pil(x).convert("RGB")) for x in inputs]
