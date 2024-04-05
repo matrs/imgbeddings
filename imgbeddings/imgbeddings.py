@@ -95,7 +95,14 @@ class imgbeddings:
         return embeddings
 
     def process_inputs(self, inputs):
-        inputs = [square_pad(self.to_pil(x).convert("RGB")) for x in inputs]
+        inputs = []
+        for x in inputs:
+            img = self.to_pil(x)
+            if img is not None:
+                inputs.append(img.convert("RGB"))
+            else:
+                logging.warning(f"Skipping invalid input: {x}")
+        # inputs = [square_pad(self.to_pil(x).convert("RGB")) for x in inputs]
         image_inputs = self.processor(images=inputs, return_tensors="np")
         return image_inputs
 
@@ -105,8 +112,15 @@ class imgbeddings:
     def to_pil(self, input):
         # if a filepath is provided, load as a PIL Image
         if isinstance(input, str):
-            input = Image.open(input)
-        return input
+            try:
+                input = Image.open(input)
+                return input
+            except FileNotFoundError:
+                logger.error("FileNotFoundError", exc_info=True)
+                return None
+            except Exception as e:
+                logger.error(f"Error loading image: {e}", exc_info=True)
+                return None
 
     def augment_images(self, inputs, multiples=1, seed=-1, **kwargs):
         if not isinstance(inputs, list):
