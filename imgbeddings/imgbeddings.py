@@ -101,7 +101,7 @@ class imgbeddings:
             if img is not None:
                 inputs.append(img.convert("RGB"))
             else:
-                logging.warning(f"Skipping invalid input: {x}")
+                logger.warning(f"Skipping invalid input: {x}")
         # inputs = [square_pad(self.to_pil(x).convert("RGB")) for x in inputs]
         image_inputs = self.processor(images=inputs, return_tensors="np")
         return image_inputs
