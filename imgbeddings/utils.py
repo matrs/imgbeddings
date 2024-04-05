@@ -4,7 +4,7 @@ from PIL import Image, ImageEnhance
 from onnxruntime import GraphOptimizationLevel, InferenceSession, SessionOptions
 
 
-def square_pad(img, background_color=(0, 0, 0)):
+def square_pad(img: Image.Image, background_color=(0, 0, 0)):
     """Pads a PIL image to a square, before augmentation."""
     # https://note.nkmk.me/en/python-pillow-add-margin-expand-canvas/
     width, height = img.size
@@ -24,7 +24,7 @@ def square_pad(img, background_color=(0, 0, 0)):
 
 
 def symmetric_img_aug(
-    img,
+    img: Image.Image,
     r_shift=0.75,
     r_degrees=15,
     background_color=(0, 0, 0),
@@ -54,7 +54,7 @@ def symmetric_img_aug(
     return img
 
 
-def get_dominant_color(img_input):
+def get_dominant_color(img_input: Image.Image):
     # https://stackoverflow.com/a/61730849
     img = img_input.copy()
     img.convert("RGB")
