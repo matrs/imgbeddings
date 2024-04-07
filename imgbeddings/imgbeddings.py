@@ -64,7 +64,7 @@ class imgbeddings:
                 + f"will transform imgbeddings to {self.pca.mean_.shape[0]}D."
             )
 
-    def to_embeddings(self, inputs, batch_size=64, pca_transform=True):
+    def to_embeddings(self, inputs: list | str, batch_size=64, pca_transform=True):
         if not isinstance(inputs, list):
             inputs = [inputs]
 
@@ -95,14 +95,15 @@ class imgbeddings:
         return embeddings
 
     def process_inputs(self, inputs: list):
+        tested_inputs = []
         for x in inputs:
             img = self.to_pil(x)
             if img is not None:
-                inputs.append(square_pad(img.convert("RGB")))
+                tested_inputs.append(square_pad(img.convert("RGB")))
             else:
                 logger.warning(f"Skipping invalid input: {x}")
         # inputs = [square_pad(self.to_pil(x).convert("RGB")) for x in inputs]
-        image_inputs = self.processor(images=inputs, return_tensors="np")
+        image_inputs = self.processor(images=tested_inputs, return_tensors="np")
         return image_inputs
 
     def create_embeddings(self, inputs):
